@@ -1,0 +1,10 @@
+syntax = "proto3";
+import "addressbook.proto";
+option java_outer_classname = "SearchRequestProtos";
+
+message SearchRequest {
+  string query = 1;
+  int32 page_number = 2;
+  int32 result_per_page = 3;
+  tutorial.AddressBook addressbook = 4;
+}

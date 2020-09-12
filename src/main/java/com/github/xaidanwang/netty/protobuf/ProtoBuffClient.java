@@ -6,6 +6,7 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.protobuf.ProtobufDecoder;
 import io.netty.handler.codec.protobuf.ProtobufEncoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
@@ -32,8 +33,12 @@ public class ProtoBuffClient {
 						protected void initChannel(NioSocketChannel ch) throws Exception {
 							ChannelPipeline pipeline = ch.pipeline();
 							pipeline.addLast(new ProtobufVarint32FrameDecoder());
+							pipeline.addLast(new ProtobufDecoder(AddressBookProtos.AddressBook.getDefaultInstance()));
+//							pipeline.addLast(new ProtobufDecoder(SearchRequestProtos.SearchRequest.getDefaultInstance()));
 							pipeline.addLast(new ProtobufVarint32LengthFieldPrepender());
 							pipeline.addLast(new ProtobufEncoder());
+							pipeline.addLast(new ClientHandler());
+							pipeline.addLast(new ClientHandler2());
 						}
 					});
 			ChannelFuture future = bootstrap.connect(new InetSocketAddress("127.0.0.1",port));
